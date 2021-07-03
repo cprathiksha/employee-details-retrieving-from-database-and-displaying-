@@ -1,0 +1,72 @@
+
+<!DOCTYPE html>
+<html>
+<head>
+<style>
+	label
+	{
+		display:inline-block;
+		width:200px;
+		margin-bottom:10px;
+		
+	}
+	.box11{
+		padding-top:10px;
+		border-width:2px;
+		border-style:solid;
+		margin: 30px 30px 30px 30px;
+		border-radius:4px;
+	}
+</style>
+<title>Add Employee</title>
+</head>
+<body>
+<center>
+<form class="box11" action="process.php">
+	<label>Enter employee number:</label>
+	<input type="text" name="empId" id="empId" onchange="checkAndSubmit()">
+	<section id="empData"></section>
+	<p id="feedback"></p>
+</form>
+</center>
+<script>	
+	function checkAndSubmit()
+	{
+		var empId = document.getElementById("empId");
+		
+		var regex = /MAHE\d{4}/i;
+		if(regex.test(empId.value))
+		{
+			document.getElementById("feedback").innerHTML = "";
+			if(window.XMLHttpRequest)
+			{
+				xhr = new XMLHttpRequest();
+			}
+			else
+			{
+				xhr = new ActiveXObject("Microsoft.XMLHTTP");
+			}
+
+			var url = "process.php?empId="+empId.value;
+			xhr.open("GET",url,true);
+			xhr.send();
+			
+			xhr.onreadystatechange = getEmpData;
+		
+			function getEmpData()
+			{
+				if(xhr.readyState==4 && xhr.status==200)
+				{
+					document.getElementById("empData").innerHTML = xhr.responseText;
+				}
+			}
+		}
+		else{
+			document.getElementById("empData").innerHTML ="";
+			document.getElementById("feedback").innerHTML = "Enter valid employee id!";
+			document.getElementById("feedback").style.color="red";
+		}
+	}
+</script>
+</body>
+</html>
